@@ -3,9 +3,6 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Dino on 26.04.2015.
- */
 public class Frame extends JFrame {
 
     Container contentPane;

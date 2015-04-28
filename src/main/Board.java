@@ -3,9 +3,7 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Created by Dino on 26.04.2015.
- */
+
 public class Board extends JPanel {
 
     private int cellsPerRow;
@@ -26,7 +24,7 @@ public class Board extends JPanel {
 
         for (int i = 0; i < cellsPerRow; i++) {
             for (int j = 0; j < cellsPerRow; j++) {
-                g2.setColor(((j +i)% 2 == 0) ? Color.red : Color.blue );
+                g2.setColor(((j +i)% 2 == 0) ? Color.BLACK : Color.white );
                 g2.fillRect((int) (j * cellSize), (int) (i * cellSize), (int) cellSize, (int) cellSize);
             }
         }
