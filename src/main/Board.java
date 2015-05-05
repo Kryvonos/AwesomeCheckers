@@ -4,34 +4,56 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class Board extends JPanel {
-
+public class Board {
+	private BoardArea world;
+	
     private int cellsPerRow;
-    private int size;
-    public Board(int size, int cellsPerRow){
-        this.size = size;
+    private final int SIZE;
+    private boolean isNeedRepaint = true;
+    
+    private static final Color ODD_COLOR = new Color(217, 189, 129);
+    private static final Color EVEN_COLOR = new Color(141, 52, 53);
+    
+    public Board(BoardArea world, int size, int cellsPerRow){
+    	this.world = world;
+        this.SIZE = size;
         this.cellsPerRow = cellsPerRow;
-        setPreferredSize(new Dimension(size, size));
+  
+    }
+    
+    public boolean isNeedRepaint() {
+    	return isNeedRepaint;
+    }
+    
+    public double getCellDimension() {
+    	return SIZE / (double) cellsPerRow;
+    }
+    
+    public int getCellsPerRow() {
+    	return cellsPerRow;
+    }
+    
+    public int getSize() {
+    	return SIZE;
     }
 
-
-
-    @Override
-    protected void paintComponent(Graphics g){
-        super.paintComponent(g);
+    protected void render(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        double cellSize = size/cellsPerRow;
+        double cellSize = SIZE / cellsPerRow;
 
         for (int i = 0; i < cellsPerRow; i++) {
             for (int j = 0; j < cellsPerRow; j++) {
-                g2.setColor(((j +i)% 2 == 0) ? Color.BLACK : Color.white );
+                g2.setColor(((j +i) % 2 == 0) ? EVEN_COLOR : ODD_COLOR );
                 g2.fillRect((int) (j * cellSize), (int) (i * cellSize), (int) cellSize, (int) cellSize);
             }
         }
+        
+        System.out.println("Painted checkers board.");
+        isNeedRepaint = false;
     }
 
-
-
-
+	public void update() {
+		
+	}
 
 }

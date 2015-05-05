@@ -9,23 +9,40 @@ public class Frame extends JFrame {
 
     private Container contentPane;
     JButton button;
-
+    JButton button2;
+    Server server = new Server();
+    Client client = new Client();
     public Frame(){
         super("checkers");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         contentPane = getContentPane();
         contentPane.setLayout(new FlowLayout());
-        contentPane.add(new Board(500, 8));
+
         button = new JButton("press me");
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("action button");
 
+                server.getPlayerStep(20, 30);
+
+                System.out.println(server.getName() + " - try");
             }
-            int i = 5;
         });
+         contentPane.add(button);
 
+        button2 = new JButton("press me client");
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("action button");
 
+                client.getPlayerStep(60, 79);
+
+                System.out.println(client.getName() + " - try");
+            }
+        });
+        contentPane.add(button2);
 
         pack();
     }
