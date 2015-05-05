@@ -5,28 +5,32 @@ import java.awt.*;
 
 
 public class Board {
-	private BoardArea world;
+	private CheckersPanel world;
+	private Checkers checkers;
 	
     private int cellsPerRow;
     private final int SIZE;
     private boolean isNeedRepaint = true;
     
-    private static final Color ODD_COLOR = new Color(217, 189, 129);
-    private static final Color EVEN_COLOR = new Color(141, 52, 53);
+    private int selectedRow = -1;
+    private int selectedCol = -1;
     
-    public Board(BoardArea world, int size, int cellsPerRow){
+    private static final Color ODD_COLOR = new Color(141, 52, 53);
+    private static final Color EVEN_COLOR = new Color(217, 189, 129);
+    
+    public Board(CheckersPanel world, int size, int cellsPerRow){
     	this.world = world;
-        this.SIZE = size;
+        this.SIZE = size/cellsPerRow * cellsPerRow;
         this.cellsPerRow = cellsPerRow;
-  
+    	this.checkers = new Checkers(this);
     }
     
     public boolean isNeedRepaint() {
     	return isNeedRepaint;
     }
     
-    public double getCellDimension() {
-    	return SIZE / (double) cellsPerRow;
+    public int getCellSize() {
+    	return SIZE / cellsPerRow;
     }
     
     public int getCellsPerRow() {
@@ -36,24 +40,40 @@ public class Board {
     public int getSize() {
     	return SIZE;
     }
+    
+    public void selectCell(int row, int col) {
+    	selectedRow = row;
+    	selectedCol = col;
+    }
 
-    protected void render(Graphics g){
+    public void render(Graphics g){
         Graphics2D g2 = (Graphics2D) g;
-        double cellSize = SIZE / cellsPerRow;
+        int cellSize = getCellSize();
 
+        g2.fillRect(10, 10, 40, 20);
+        
         for (int i = 0; i < cellsPerRow; i++) {
             for (int j = 0; j < cellsPerRow; j++) {
                 g2.setColor(((j +i) % 2 == 0) ? EVEN_COLOR : ODD_COLOR );
-                g2.fillRect((int) (j * cellSize), (int) (i * cellSize), (int) cellSize, (int) cellSize);
+                g2.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
             }
         }
         
-        System.out.println("Painted checkers board.");
+        if (selectedRow != -1 && selectedCol != -1 && selectedRow < cellsPerRow && selectedCol < cellsPerRow) {
+        	g2.setColor(Color.WHITE);
+        	g2.drawRect(selectedCol*cellSize, selectedRow*cellSize, cellSize-1, cellSize-1);
+        	g2.drawRect(selectedCol*cellSize+1, selectedRow*cellSize+1, cellSize-3, cellSize-3);
+        }
+  
         isNeedRepaint = false;
     }
 
 	public void update() {
 		
+	}
+
+	public Checkers getCheckers() {
+		return checkers;
 	}
 
 }
