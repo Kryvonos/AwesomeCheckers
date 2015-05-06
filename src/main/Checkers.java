@@ -14,8 +14,6 @@ public class Checkers {
 		this.board = board;
 		this.rowsQuantity = rowsQuantity;
 		this.checkers = new Checker[board.getCellsPerRow()][board.getCellsPerRow()];
-
-		System.out.println("!" + board.getCellsPerRow());
 		
 		init();
 	}
@@ -47,22 +45,43 @@ public class Checkers {
 		return checkers[row][col];
 	}
 	
-	//It isn't ready method
-	public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {		
-		checkers[toRow][toCol] = checkers[fromRow][toCol];
-		checkers[fromRow][toCol] = null;
-		
-		checkers[fromRow][toCol].moveToCell(toRow, toCol);
+	public void removeAt(int row, int col) {
+		checkers[row][col].remove();
 	}
-
+	
+	//It isn't ready method
+	public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {			
+		Checker from = checkers[fromRow][fromCol];
+		from.moveToCell(toRow, toCol);
+		
+		checkers[toRow][toCol] = from;
+		from = null;
+	}
+	
+	public boolean canMove(int fromRow, int fromCol, int toRow, int toCol) {
+		Player player = board.getWorld().getGame().getCurrentPlayer();
+		
+		return false;
+	}
+	
+	public boolean canJump(int fromRow, int fromCol, int toRow, int toCol) {
+		Player player = board.getWorld().getGame().getCurrentPlayer();
+		
+		return false;
+	}
+	
 	public void update() {
 		for (int i=0; i<board.getCellsPerRow(); i++)
-			for (int j=0; j<board.getCellsPerRow(); j++)
-				if (checkers[i][j] != null) checkers[i][j].update();
+			for (int j=0; j<board.getCellsPerRow(); j++) {
+				Checker checker = checkers[i][j];
+				if (checker != null) {
+					checker.update();
+					if (checker.isNeedRemove()) checker = null;
+				}
+			}
 	}
 
 	public void render(Graphics g) {
-		System.out.println("rendering checkers");
 		Checker[][] checkers = getCheckers();
 		
 		for (int i=0; i<board.getCellsPerRow(); i++)
