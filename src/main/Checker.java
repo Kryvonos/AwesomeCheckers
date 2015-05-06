@@ -24,6 +24,7 @@ public class Checker {
 	private boolean isNeedRepaint = true;
 	private boolean isAnimate = false;
 	private boolean isAnimateLocation = false;
+	private boolean isAnimateOpacity = false;
 
 	private long lastAnimationTime;
 	private long animationStarted;
@@ -113,7 +114,7 @@ public class Checker {
 				y += (dy - y) * progress;
 			}
 			
-			if (dOpacity != opacity) {
+			if (isAnimateOpacity) {
 				opacity *= (1-progress);		
 				if (opacity == 0) isNeedRemove = true;
 			}
@@ -123,6 +124,7 @@ public class Checker {
 				y = dy;
 				isAnimate = false;
 				isAnimateLocation = false;
+				isAnimateOpacity = false;
 			}
 			lastAnimationTime = currentTime;
 		}
@@ -135,6 +137,7 @@ public class Checker {
 	private void fadeOut(int millis) {
 		animationMode(millis);
 		dOpacity = 0;
+		isAnimateOpacity = true;
 	}
 	
 	private void animationMode(int millis) {
