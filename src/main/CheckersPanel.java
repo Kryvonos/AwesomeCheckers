@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import main.Board.Cell;
 import main.Checker.CheckerType;
 
 public class CheckersPanel extends JPanel implements MouseListener {
@@ -54,6 +55,9 @@ public class CheckersPanel extends JPanel implements MouseListener {
 		board.update();
 	}
 	
+	public Game getGame() {
+		return game;
+	}
 	
 	@Override
 	public Dimension getPreferredSize() {
@@ -68,8 +72,6 @@ public class CheckersPanel extends JPanel implements MouseListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
-		System.out.println("rendering checkersCanvas");
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -83,6 +85,9 @@ public class CheckersPanel extends JPanel implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int row = e.getY()/board.getCellSize();
 		int col = e.getX()/board.getCellSize();
+		
+		Cell cell = board.getSelectedCell();
+		if (cell != null) checkers.makeMove(cell.row, cell.col, row, col);
 		
 		if (checkers.getCheckerAt(row, col) != null) board.selectCell(row, col);
 		
