@@ -18,6 +18,16 @@ public class Board {
     private static final Color ODD_COLOR = new Color(141, 52, 53);
     private static final Color EVEN_COLOR = new Color(217, 189, 129);
     
+    public class Cell {
+    	public int row;
+    	public int col;
+    	
+    	public Cell(int row, int col) {
+    		this.row = row;
+    		this.col = col;
+    	}
+    }
+    
     public Board(CheckersPanel world, int size, int cellsPerRow){
     	this.world = world;
         this.SIZE = size/cellsPerRow * cellsPerRow;
@@ -41,9 +51,17 @@ public class Board {
     	return SIZE;
     }
     
+    public CheckersPanel getWorld() {
+    	return world;
+    }
+    
     public void selectCell(int row, int col) {
     	selectedRow = row;
     	selectedCol = col;
+    }
+    
+    public Cell getSelectedCell() {
+    	return (selectedRow > 0 || selectedCol > 0) ? new Cell(selectedRow, selectedCol) : null;
     }
 
     public void render(Graphics g){
