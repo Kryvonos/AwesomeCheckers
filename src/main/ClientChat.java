@@ -54,6 +54,8 @@ public class ClientChat {
 		new ListenFromServer().start();
 
 		try {
+			if(username == null || username.trim().equals(""))
+				username = "Anonymous";
 			sOutput.writeObject(username);
 		} catch (IOException eIO) {
 			display("Exception doing login : " + eIO);

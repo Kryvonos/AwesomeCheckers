@@ -148,7 +148,7 @@ public class ServerChat {
 				sInput = new ObjectInputStream(socket.getInputStream());
 
 				username = (String) sInput.readObject();
-				System.out.println(username);
+			
 				
 				broadcast(username + " just connected");
 			} catch (IOException e) {
@@ -186,14 +186,14 @@ public class ServerChat {
 					keepGoing = false;
 					break;
 				case ChatMessage.WHOISIN:
-					writeMsg("List of the users connected at "
-							+ sdf.format(new Date()) + "\n");
+					writeMsg("List of the users connected:\n");
 
 					for (int i = 0; i < al.size(); ++i) {
 						ClientThread ct = al.get(i);
 						writeMsg((i + 1) + ") " + ct.username + " since "
-								+ ct.date);
+								+ sdf.format(new Date()));
 					}
+						writeMsg("\n");
 					break;
 				}
 			}
