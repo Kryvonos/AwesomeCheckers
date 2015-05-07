@@ -1,8 +1,6 @@
 package main;
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
+
 import java.io.*;
 import java.net.Socket;
 
