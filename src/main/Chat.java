@@ -26,7 +26,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultCaret;
 
 public class Chat extends JPanel implements ActionListener {
-	private Client client;
+	private ClientChat client;
 	private static final int WIDTH = 500;
 	private static final int HEIGHT = 500;
 	private javax.swing.JButton jButton1;
@@ -44,7 +44,7 @@ public class Chat extends JPanel implements ActionListener {
 		this.port = port;
 		init();
 		String input = JOptionPane.showInputDialog("Enter login:");
-		client = new Client("localhost", 1500, input, this);
+		client = new ClientChat("localhost", 1500, input, this);
 
 		if (!client.start())
 			return;

@@ -82,6 +82,7 @@ public class ServerChat {
 
 	private void display(String msg) {
 		String time = sdf.format(new Date()) + " " + msg;
+		System.out.println(time);
 
 	}
 

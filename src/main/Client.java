@@ -1,159 +1,71 @@
 package main;
 
-import java.net.*;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 import java.io.*;
-import java.util.*;
+import java.net.Socket;
 
-/*
- * The Client that can be run both as a console or a GUI
- */
-public class Client {
+public class Client implements Runnable {
 
-	private ObjectInputStream sInput;
-	private ObjectOutputStream sOutput;
-	private Socket socket;
-
-	private Chat cg;
-
-	private String server, username;
+	private Socket socket = null;
+	private String host;
 	private int port;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 
-	Client(String server, int port, String username) {
-
-		this(server, port, username, null);
-	}
-
-	Client(String server, int port, String username, Chat cg) {
-		this.server = server;
+	public Client(String host, int port) {
+		this.host = host;
 		this.port = port;
-		this.username = username;
-		this.cg = cg;
+		new Thread(this).start();
 	}
-
-	public boolean start() {
-
+	
+	public Move getMove(){
+	Move move = null;
 		try {
-			socket = new Socket(server, port);
-		} catch (Exception ec) {
-			display("Error connectiong to server:" + ec);
-			return false;
-		}
-
-		String msg = "Connection accepted " + socket.getInetAddress() + ":"
-				+ socket.getPort();
-		display(msg);
-
-		try {
-			sInput = new ObjectInputStream(socket.getInputStream());
-			sOutput = new ObjectOutputStream(socket.getOutputStream());
-		} catch (IOException eIO) {
-			display("Exception creating new Input/output Streams: " + eIO);
-			return false;
-		}
-
-		new ListenFromServer().start();
-
-		try {
-			sOutput.writeObject(username);
-		} catch (IOException eIO) {
-			display("Exception doing login : " + eIO);
-			disconnect();
-			return false;
-		}
-
-		return true;
-	}
-
-	private void display(String msg) {
-		if (cg == null)
-			System.out.println(msg);
-		else
-			cg.append(msg + "\n");
-	}
-
-	void sendMessage(ChatMessage msg) {
-		try {
-			sOutput.writeObject(msg);
+			move = (Move)in.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
-			display("Exception writing to server: " + e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return move;
 	}
 
-	private void disconnect() {
-
+	public void sendMove(Move move){
 		try {
-			if (sInput != null)
-				sInput.close();
-		} catch (Exception e) {
+			out.writeObject(move);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
+	@Override
+	public void run() {
 		try {
-			if (sOutput != null)
-				sOutput.close();
-		} catch (Exception e) {
-		}
-		try {
-			if (socket != null)
+			socket = new Socket(host, port);
+			in = new ObjectInputStream(socket.getInputStream());
+			out= new ObjectOutputStream(socket.getOutputStream());
+			try{
+			//	while(true){
+				Move move = new Move(3,4,5,6);
+					sendMove(move);
+					System.out.println(getMove().toString());
+			//	}
+			}finally{
 				socket.close();
-		} catch (Exception e) {
+			}
+		} catch (IOException ie) {
+			ie.printStackTrace();
 		}
-
 	}
-
-	public static void main(String[] args) {
-
-		int portNumber = 1500;
-		String serverAddress = "localhost";
-		String userName = "Anonymous";
-
-		Client client = new Client(serverAddress, portNumber, userName);
-
-		if (!client.start())
-			return;
-
-		Scanner scan = new Scanner(System.in);
-		while (true) {
-			System.out.print("> ");
-
-			String msg = scan.nextLine();
-
-			if (msg.equalsIgnoreCase("LOGOUT")) {
-				client.sendMessage(new ChatMessage(ChatMessage.LOGOUT, ""));
-
-				break;
-			}
-
-			else if (msg.equalsIgnoreCase("WHOISIN")) {
-				client.sendMessage(new ChatMessage(ChatMessage.WHOISIN, ""));
-			} else {
-				client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, msg));
-			}
-		}
-
-		client.disconnect();
-
-	}
-
-	class ListenFromServer extends Thread {
-
-		public void run() {
-			while (true) {
-				try {
-					String msg = (String) sInput.readObject();
-
-					if (cg == null) {
-						System.out.println(msg);
-						System.out.print("> ");
-					} else {
-						cg.append(msg);
-					}
-				} catch (IOException e) {
-					display("Goodbuy");
-					break;
-				}
-
-				catch (ClassNotFoundException e2) {
-				}
-			}
-		}
+	
+	public static void main(String[] args){
+		System.out.println("client");
+	 new Client(Server.HOST, Server.PORT);
 	}
 }
+
