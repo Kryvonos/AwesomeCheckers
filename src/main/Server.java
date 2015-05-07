@@ -41,6 +41,7 @@ public class Server implements Runnable {
 			e.printStackTrace();
 		}
 	}
+	
 
 	private void deleteRoom() {
 		for (Room r: rooms){
