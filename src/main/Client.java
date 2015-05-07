@@ -5,34 +5,63 @@ import java.net.Socket;
 
 public class Client implements Runnable {
 
-    private boolean isPlaying = true;
-    private DataInputStream input = null;
-    private DataOutputStream output = null;
-    private Socket socket = null;
+	private Socket socket = null;
+	private String host;
+	private int port;
+	private ObjectInputStream in;
+	private ObjectOutputStream out;
 
-   public Client()
-   {
-       new Thread(this).start();
-   }
+	public Client(String host, int port) {
+		this.host = host;
+		this.port = port;
+		new Thread(this).start();
+	}
+	
+	public Move getMove(){
+	Move move = null;
+		try {
+			move = (Move)in.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return move;
+	}
 
-    @Override
-    public void run() {
-        try {
-         socket = new Socket("127.0.0.1", Server.PORT);
-         input = new DataInputStream(socket.getInputStream());
-         output = new DataOutputStream(socket.getOutputStream());
-        } catch (IOException ie) {
-            }
-    }
-
-  public void close(){
-      try {
-          input.close();
-          output.close();
-          socket.close();
-      } catch (IOException e) {
-          e.printStackTrace();
-      }
-
-  }
+	public void sendMove(Move move){
+		try {
+			out.writeObject(move);
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	@Override
+	public void run() {
+		try {
+			socket = new Socket(host, port);
+			in = new ObjectInputStream(socket.getInputStream());
+			out= new ObjectOutputStream(socket.getOutputStream());
+			try{
+			//	while(true){
+				Move move = new Move(3,4,5,6);
+					sendMove(move);
+					System.out.println(getMove().toString());
+			//	}
+			}finally{
+				socket.close();
+			}
+		} catch (IOException ie) {
+			ie.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args){
+		System.out.println("client");
+	 new Client(Server.HOST, Server.PORT);
+	}
 }
