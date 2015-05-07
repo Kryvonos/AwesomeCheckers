@@ -15,7 +15,7 @@ public class Client  {
 	private Socket socket;
 
 	// if I use a GUI or not
-	private ChatGui cg;
+	private Chat cg;
 	
 	// the server, the port and the username
 	private String server, username;
@@ -28,7 +28,7 @@ public class Client  {
 	}
 
 
-	Client(String server, int port, String username, ChatGui cg) {
+	Client(String server, int port, String username, Chat cg) {
 		this.server = server;
 		this.port = port;
 		this.username = username;

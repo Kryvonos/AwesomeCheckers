@@ -128,7 +128,7 @@ public class Game extends JFrame implements Runnable {
 			world.repaint();
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch (Exception e) {}
 		}
 	}

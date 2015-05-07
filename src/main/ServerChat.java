@@ -178,7 +178,8 @@ public class ServerChat {
 
 				username = (String) sInput.readObject();
 				System.out.println(username);
-				display(username + " just connected.");
+				display(username + " just connected");
+				broadcast(username + " just connected\n");
 			} catch (IOException e) {
 				display("Exception creating new Input/output Streams: " + e);
 				return;
@@ -196,7 +197,7 @@ public class ServerChat {
 
 					cm = (ChatMessage) sInput.readObject();
 				} catch (IOException e) {
-					display(" Exception reading Streams: " + e);
+					//display(" Exception reading Streams: " + e);
 					break;
 				} catch (ClassNotFoundException e2) {
 					break;
