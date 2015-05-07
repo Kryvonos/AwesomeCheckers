@@ -12,41 +12,41 @@ public class Move implements Serializable {
 	
 	
 	public Move(int fromRow, int fromCol, int toRow, int toCol){
-		this.fromX = fromX;
-		this.fromY = fromY;
-		this.toX = toX;
-		this.toY = toY;
+		this.fromX = fromRow;
+		this.fromY = fromCol;
+		this.toX = toRow;
+		this.toY = toCol;
 	}
 
-	public int getFromX() {
+	public int getFromRow() {
 		return fromX;
 	}
 
-	public void setFromX(int fromX) {
+	public void setFromRow(int fromX) {
 		this.fromX = fromX;
 	}
 
-	public int getFromY() {
+	public int getFromCol() {
 		return fromY;
 	}
 
-	public void setFromY(int fromY) {
+	public void setFromCol(int fromY) {
 		this.fromY = fromY;
 	}
 
-	public int getToX() {
+	public int getToRow() {
 		return toX;
 	}
 
-	public void setToX(int toX) {
+	public void setToRow(int toX) {
 		this.toX = toX;
 	}
 
-	public int getToY() {
+	public int getToCol() {
 		return toY;
 	}
 
-	public void setToY(int toY) {
+	public void setToCol(int toY) {
 		this.toY = toY;
 	}
 

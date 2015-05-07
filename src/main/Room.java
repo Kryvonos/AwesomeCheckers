@@ -61,16 +61,22 @@ public class Room implements Runnable {
 		while (isOver) {
 			if (sockets[0] != null && sockets[1] != null) {
 				try {
-					obj = (Move) input[0].readObject();
-					System.out.println(obj.toString() + " " + sockets[0] + " "
-							+ sockets[1]);
-					out[0].writeObject(obj);
-					out[0].flush();
-					isOver = false;
-					// out[1].flush();
-					// obj = input[1].readObject();
-					// out[0].writeObject(obj);
-					// out[0].flush();
+					boolean sending = true;
+					while (sending) {
+						sending = input[0].readBoolean();
+						obj = (Move) input[0].readObject();
+
+						out[1].writeObject(obj);
+						out[1].flush();
+					}
+					sending = true;
+					while (sending) {
+						sending = input[1].readBoolean();
+						obj = (Move) input[1].readObject();
+						isOver = input[1].readBoolean();
+						out[0].writeObject(obj);
+						out[0].flush();
+					}
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -94,7 +100,12 @@ public class Room implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	public boolean isOver() {
+
+		return isOver;
 	}
 
 }

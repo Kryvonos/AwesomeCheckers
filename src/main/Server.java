@@ -29,6 +29,9 @@ public class Server implements Runnable {
 				Socket socket = serverSocket.accept();
 				System.out.println(socket);
 				new JabberServer(socket, this);
+				if (rooms.size() > 1){
+					deleteRoom();
+				}
 			}
 		}finally{
 			serverSocket.close();
@@ -37,6 +40,15 @@ public class Server implements Runnable {
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+
+	private void deleteRoom() {
+		for (Room r: rooms){
+			if (!r.isOver()){
+				rooms.remove(r);
+			}
+		}
+		
 	}
 
 	public static void main(String []args){
