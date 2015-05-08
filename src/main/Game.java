@@ -31,13 +31,13 @@ public class Game extends JFrame implements Runnable {
 	private Container contPane;
 	private Color bgColor = new Color(250, 250, 250);
 	
-	private CheckersPanel world = new CheckersPanel(this);
+	private CheckersPanel world;
 	private Chat chat;
 	private JPanel statusLine = new JPanel();
 	
-	private Player player;
-	private Enemy enemy;
-	private Player currentPlayer;
+	private int playerId = 0;
+	private int enemyId = 1;
+	private int currentPlayerId = 0;
 	
 	private boolean isRunning = true;
 	
@@ -47,10 +47,7 @@ public class Game extends JFrame implements Runnable {
 		HOST = host;
 		PORT = port;
 		chat = new Chat(HOST, PORT);
-		
-		player = new Player();
-		enemy = new Enemy();
-		currentPlayer = player;
+		world = new CheckersPanel(this);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(false);
@@ -96,7 +93,7 @@ public class Game extends JFrame implements Runnable {
         c.weighty = .999f;
         c.insets = new Insets(0, 0, 0, 0);
         c.anchor = GridBagConstraints.PAGE_END;
-        statusLine.add(new JLabel("Status line"));
+        statusLine.add(new JLabel("Waiting for connection ..."));
         statusLine.setBackground(new Color(240, 240, 240));
         contPane.add(statusLine, c);
 	}
@@ -109,16 +106,16 @@ public class Game extends JFrame implements Runnable {
 		isRunning = false;
 	}
 	
-	public Player getPlayer() {
-		return player;
+	public int getPlayerId() {
+		return playerId;
 	}
 	
-	public Enemy getEnemy() {
-		return enemy;
+	public int getEnemyId() {
+		return enemyId;
 	}
 	
-	public Player getCurrentPlayer() {
-		return currentPlayer;
+	public int getCurrentPlayerId() {
+		return currentPlayerId;
 	}
 
 	@Override
@@ -138,6 +135,10 @@ public class Game extends JFrame implements Runnable {
 		Game checkers = new Game("127.0.0.1", 8081);
 		
 		checkers.start();
+	}
+
+	public void toggleCurrentPlayerId() {
+		currentPlayerId = (currentPlayerId == 0) ? 1 : 0;
 	}
 
 }

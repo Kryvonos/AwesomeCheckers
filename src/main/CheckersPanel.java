@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -87,11 +89,28 @@ public class CheckersPanel extends JPanel implements MouseListener {
 		int col = e.getX()/board.getCellSize();
 		
 		Cell cell = board.getSelectedCell();
-		if (cell != null) checkers.makeMove(cell.row, cell.col, row, col);
+		Checker clickedChecker = checkers.getCheckerAt(row, col);
 		
-		if (checkers.getCheckerAt(row, col) != null) board.selectCell(row, col);
+		if (cell == null) {
+			board.selectCell(row, col);
+			cell = board.getSelectedCell();
+		}
 		
-		repaint();
+		if (clickedChecker != null && clickedChecker.getPlayerId() != game.getCurrentPlayerId()) return;
+		
+		Checker selectedChecker = checkers.getCheckerAt(cell.row, cell.col);
+		
+		if (clickedChecker != null && selectedChecker != null && clickedChecker.getType() == selectedChecker.getType()) {
+			board.selectCell(row, col);
+			return;
+		}
+		
+		if (checkers.canMove(cell.row, cell.col, row, col)) {
+			checkers.makeMove(cell.row, cell.col, row, col);
+			board.deselect();
+			game.toggleCurrentPlayerId();
+		}
+
 	}
 
 	@Override
