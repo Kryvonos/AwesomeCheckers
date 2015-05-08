@@ -74,6 +74,9 @@ public class Room implements Runnable {
 					out[(numberStep+1)%2].flush();
 					sending = true;
 					++numberStep;
+					if (numberStep >=1){
+						break;
+					}
 /*
 					while (sending) {
 						sending = input[1].readBoolean();

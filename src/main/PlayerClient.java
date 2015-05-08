@@ -33,6 +33,7 @@ public class PlayerClient implements Runnable {
 			out = new ObjectOutputStream(socket.getOutputStream());
 			try {
 				while (isRunning) {
+
 					try {
 						Thread.sleep(15);
 					} catch (InterruptedException e) {
@@ -40,9 +41,6 @@ public class PlayerClient implements Runnable {
 						e.printStackTrace();
 					}
 				}
-
-				// }
-				// System.out.println("nothing");
 			} finally {
 				socket.close();
 			}
@@ -87,5 +85,9 @@ public class PlayerClient implements Runnable {
 			e.printStackTrace();
 		}
 		return move;
+	}
+
+	public static void main(String[] args) {
+		new PlayerClient(Server.PORT, Server.HOST);
 	}
 }
