@@ -24,10 +24,10 @@ public class Game extends JFrame implements Runnable {
 
 	public static int WIDTH = 700;
 	public static int HEIGHT = 500;
-	
+
 	public final String HOST;
 	public final int PORT;
-	
+
 	private Container contPane;
 	private Color bgColor = new Color(250, 250, 250);
 	
@@ -40,10 +40,10 @@ public class Game extends JFrame implements Runnable {
 	private int currentPlayerId = 0;
 	
 	private boolean isRunning = true;
-	
+
 	public Game(String host, int port) {
 		super("AwesomeCheckers");
-		
+
 		HOST = host;
 		PORT = port;
 		chat = new Chat(HOST, PORT);
@@ -51,18 +51,18 @@ public class Game extends JFrame implements Runnable {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(false);
-	
-        contPane = getContentPane();
-        contPane.setLayout(new GridBagLayout());
-        contPane.setBackground(bgColor);
-        
-        init();
-        
-        pack();
-        setResizable(false);
+
+		contPane = getContentPane();
+		contPane.setLayout(new GridBagLayout());
+		contPane.setBackground(bgColor);
+
+		init();
+
+		pack();
+		setResizable(false);
 		setVisible(true);
 	}
-	
+
 	public Game() {
 		this(null, 0);
 	}
@@ -97,11 +97,11 @@ public class Game extends JFrame implements Runnable {
         statusLine.setBackground(new Color(240, 240, 240));
         contPane.add(statusLine, c);
 	}
-	
+
 	public void start() {
 		new Thread(this).start();
 	}
-	
+
 	public void stop() {
 		isRunning = false;
 	}
@@ -119,21 +119,22 @@ public class Game extends JFrame implements Runnable {
 	}
 
 	@Override
-	public void run() {	
+	public void run() {
 		while (isRunning) {
 			world.update();
 			world.repaint();
+			
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+			}
 
-            try {
-                Thread.sleep(10);
-            } catch (Exception e) {}
 		}
 	}
-	
-	
+
 	public static void main(String[] args) {
 		Game checkers = new Game("127.0.0.1", 8081);
-		
+
 		checkers.start();
 	}
 

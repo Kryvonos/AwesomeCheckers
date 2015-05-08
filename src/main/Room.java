@@ -58,25 +58,37 @@ public class Room implements Runnable {
 	@Override
 	public void run() {
 		Move obj = null;
+		 int numberStep = 0;
+		 boolean sending = true;
 		while (isOver) {
 			if (sockets[0] != null && sockets[1] != null) {
 				try {
-					boolean sending = true;
 					while (sending) {
-						sending = input[0].readBoolean();
-						obj = (Move) input[0].readObject();
+						sending = input[numberStep%2].readBoolean();
+						obj = (Move) input[numberStep%2].readObject();
+						out[(numberStep+1)%2].writeObject(obj);
+						out[(numberStep+1)%2].flush();
 
-						out[1].writeObject(obj);
-						out[1].flush();
 					}
+					out[(numberStep+1)%2].writeObject(null);
+					out[(numberStep+1)%2].flush();
 					sending = true;
+					++numberStep;
+					if (numberStep >=1){
+						break;
+					}
+/*
 					while (sending) {
 						sending = input[1].readBoolean();
 						obj = (Move) input[1].readObject();
-						isOver = input[1].readBoolean();
 						out[0].writeObject(obj);
 						out[0].flush();
+
 					}
+					out[0].writeObject(null);
+					out[0].flush();
+*/
+					break;
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
