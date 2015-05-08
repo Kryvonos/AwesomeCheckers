@@ -35,9 +35,9 @@ public class Game extends JFrame implements Runnable {
 	private Chat chat;
 	private JPanel statusLine = new JPanel();
 
-	private Player player;
-	private Enemy enemy;
-	private Player currentPlayer;
+	private int playerId;
+	private int enemyId;
+	private int currentPlayerId;
 
 	private boolean isRunning = true;
 
@@ -48,9 +48,6 @@ public class Game extends JFrame implements Runnable {
 		PORT = port;
 		chat = new Chat(HOST, PORT);
 
-		player = new Player();
-		enemy = new Enemy();
-		currentPlayer = player;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(false);
@@ -109,16 +106,16 @@ public class Game extends JFrame implements Runnable {
 		isRunning = false;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public int getPlayer() {
+		return playerId;
 	}
 
-	public Enemy getEnemy() {
-		return enemy;
+	public int getEnemy() {
+		return enemyId;
 	}
 
-	public Player getCurrentPlayer() {
-		return currentPlayer;
+	public int getCurrentPlayer() {
+		return currentPlayerId;
 	}
 
 	@Override
@@ -126,7 +123,7 @@ public class Game extends JFrame implements Runnable {
 		while (isRunning) {
 			world.update();
 			world.repaint();
-			
+
 			try {
 				Thread.sleep(10);
 			} catch (Exception e) {

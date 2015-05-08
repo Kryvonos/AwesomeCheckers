@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import com.sun.xml.internal.fastinfoset.stax.events.ReadIterator;
+
 public class PlayerClient implements Runnable {
 	private static int client = 0;
 	private int id;
@@ -15,79 +17,72 @@ public class PlayerClient implements Runnable {
 	private ObjectInputStream in = null;
 	private ObjectOutputStream out = null;
 	private boolean isRunning = true;
+	private Game game;
+	private Move move = null;
+	private boolean isOver;
+	ArrayList<Move> moves;
+	private Socket socket;
 
-	public PlayerClient(int port, String host) {
+	public PlayerClient(int port, String host, Game game) {
 		this.host = host;
 		this.port = port;
-		id = client % 2;
-		client++;
-		new Thread(this).start();
+		this.game = game;
+		try {
+			socket = new Socket(Server.HOST, Server.PORT);
+			out = new ObjectOutputStream(socket.getOutputStream());
+			in = new ObjectInputStream(socket.getInputStream());
+			
+			new Thread(this).start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
 	}
 
 	@Override
 	public void run() {
-
-		try {
-			Socket socket = new Socket(Server.HOST, Server.PORT);
-			in = new ObjectInputStream(socket.getInputStream());
-			out = new ObjectOutputStream(socket.getOutputStream());
+		System.out.println("I'm in run client");
+		while (isRunning){
 			try {
-				while (isRunning) {
-
-					try {
-						Thread.sleep(15);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				out.writeObject(new Move(34,5,67,8));
+				out.flush();
+				
+				System.out.println((Move) in.readObject());
+				break;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					socket.close();
+				} catch (IOException e) {
+					System.err.println("fail to close socket");
 				}
-			} finally {
-				socket.close();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
+		
 	}
 
 	public void sendMove(Move move, boolean isOver) {
-		try {
 
-			out.writeBoolean(isOver);
-			out.writeObject(move);
-			out.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(out);
+		this.move = move;
+		this.isOver = isOver;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public ArrayList<Move> getObject() {
-		System.out.println("get Move");
-		Move abj = null;
-		ArrayList<Move> move = new ArrayList<Move>();
-		try {
-			abj = (Move) in.readObject();
-			while (abj != null) {
-				move.add(abj);
-				abj = (Move) in.readObject();
-			}
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return move;
+	public ArrayList<Move> getMoveList() {
+		return moves;
+	}
+	
+	public static void main (String args[]){
+		PlayerClient player = new PlayerClient(Server.PORT, Server.HOST, new Game());
 	}
 
-	public static void main(String[] args) {
-		new PlayerClient(Server.PORT, Server.HOST);
-	}
 }

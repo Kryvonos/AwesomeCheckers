@@ -53,19 +53,18 @@ public class Checkers {
 	public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {			
 		Checker from = checkers[fromRow][fromCol];
 		from.moveToCell(toRow, toCol);
-		
 		checkers[toRow][toCol] = from;
 		from = null;
 	}
 	
 	public boolean canMove(int fromRow, int fromCol, int toRow, int toCol) {
-		Player player = board.getWorld().getGame().getCurrentPlayer();
+		int player = board.getWorld().getGame().getCurrentPlayer();
 		
 		return false;
 	}
 	
 	public boolean canJump(int fromRow, int fromCol, int toRow, int toCol) {
-		Player player = board.getWorld().getGame().getCurrentPlayer();
+		int player = board.getWorld().getGame().getCurrentPlayer();
 		
 		return false;
 	}

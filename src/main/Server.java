@@ -5,41 +5,34 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Server implements Runnable {
+public class Server {
 	public static final int PORT = 3001;
 	public static final String HOST = "127.0.0.1";
 
-	private ArrayList<Room> rooms = new ArrayList<Room>();
+	private static ArrayList<Room> rooms = new ArrayList<Room>();
 
-	public ArrayList<Room> getRoomsList(){
+	public static ArrayList<Room> getRoomsList(){
 		return rooms;
 	}
-	
-	public Server() {
-		new Thread(this).start();
-	}
 
-	@Override
-	public void run() {
-		try{
+	public static void main(String []args) throws IOException{ 
 		ServerSocket serverSocket = new ServerSocket(PORT);
-		System.out.println(serverSocket);
 		try{
 			while(true){
 				Socket socket = serverSocket.accept();
-				System.out.println(socket);
-				new JabberServer(socket, this);
-				if (rooms.size() > 1){
-					deleteRoom();
-				}
+				
+				System.out.println("socket: " + socket);
+				
+				new JabberServer(socket);
+//				if (rooms.size() > 1){
+//					deleteRoom();
+//				}
 			}
-		}finally{
-			serverSocket.close();
-			
-		}
-		}catch(IOException e){
+		} catch(IOException e){
 			e.printStackTrace();
-		}
+		} finally{
+			serverSocket.close();
+		} 
 	}
 	
 
@@ -52,8 +45,4 @@ public class Server implements Runnable {
 		
 	}
 
-	public static void main(String []args){
-		System.out.println("server");
-		new Server();
-	}
 }
