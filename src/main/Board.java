@@ -60,8 +60,9 @@ public class Board {
     	selectedCol = col;
     }
     
-    public void deselect(){
-    	selectCell(-1,-1);
+
+    public void deselect() {
+    	selectCell(-1, -1);
     }
     
     public Cell getSelectedCell() {
