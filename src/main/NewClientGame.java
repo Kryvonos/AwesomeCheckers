@@ -113,6 +113,7 @@ public class NewClientGame implements Serializable {
 		// client.sendMove(new Move(4,4, 7, 7));
 
 	}
+	
 
 	class ListenFromServer extends Thread {
 
@@ -121,18 +122,12 @@ public class NewClientGame implements Serializable {
 				try {
 
 					Move m = new Move(0, 0, 0, 0);
-			
-						sOutput.writeObject(m);
+
+					sOutput.writeObject(m);
 					Move res = (Move) sInput.readObject();
 					System.out.println(res);
-					
-				
-					// if (cg == null) {
-					// System.out.println(msg);
-					// System.out.print("> ");
-					// // } else {
-					// cg.append(msg);
-					// }
+
+
 				} catch (IOException e) {
 					display("Goodbuy");
 					break;

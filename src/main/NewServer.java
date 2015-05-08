@@ -87,22 +87,22 @@ public class NewServer {
 
 	}
 
-	private synchronized void broadcast(Move move) {
+	private synchronized void broadcast(Move move, int id) {
 
 		// String time = sdf.format(new Date());
 		// String messageLf = time + " " + message + "\n";
 
-		System.out.print(move);
+		//System.out.print(move);
 
-		for (int i = al.size(); --i >= 0;) {
-			ClientThread ct = al.get(i);
+		//for (int i = al.size(); --i >= 0;) {
+			ClientThread ct = al.get(id);
 
 			if (!ct.writeMsg(move)) {
-				al.remove(i);
-				display("Disconnected Client ");
+				al.remove(id);
+				//display("Disconnected Client ");
 			}
 		}
-	}
+
 
 	synchronized void remove(int id) {
 
@@ -164,45 +164,55 @@ public class NewServer {
 			while (keepGoing) {
 
 				try {
-					synchronized (check) {
+					
+				move = (Move) sInput.readObject();
+				if(id == 0)
+					broadcast(move, 1);
+				if(id == 1)
+					broadcast(move, 0);
+				}
+				catch (Exception e) {
+					
+				}
+					//synchronized (check) {
 						// System.out.println(check!=data.getState());
 
-						try {
-							if (id == 1 && pointer == true) {
-								try {
-									move = (Move) sInput.readObject();
-								} catch (ClassNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								System.out.println(move);
-								broadcast(move);
-								pointer = false;
-								check.notifyAll();
-								check.wait();
-							} else if (id == 2 && pointer == false) {
-								try {
-									move = (Move) sInput.readObject();
-								} catch (ClassNotFoundException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								System.out.println(move);
-								broadcast(move);
-								pointer = true;
-								check.notifyAll();
-								check.wait();
-							}
+					//	try {
+//							if (id == 1 && pointer == true) {
+//								try {
+//									move = (Move) sInput.readObject();
+//								} catch (ClassNotFoundException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//								System.out.println(move);
+//								broadcast(move);
+//								pointer = false;
+//								check.notifyAll();
+//								check.wait();
+//							} else if (id == 2 && pointer == false) {
+//								try {
+//									move = (Move) sInput.readObject();
+//								} catch (ClassNotFoundException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//								System.out.println(move);
+//								broadcast(move);
+//								pointer = true;
+//								check.notifyAll();
+//								check.wait();
+//							}
 
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				} catch (InterruptedException e) {
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//				} catch (InterruptedException e) {
 				}
 
-			}
+			
 
 			remove(id);
 			close();

@@ -88,29 +88,28 @@ public class CheckersPanel extends JPanel implements MouseListener {
 		int row = e.getY()/board.getCellSize();
 		int col = e.getX()/board.getCellSize();
 		
+		if (checkers.isExitChecker(row, col) && game.getCurrentPlayerId() == checkers.getCheckerAt(row, col).getPlayerId()) {
+			board.selectCell(row, col);
+		}
+		
 		Cell cell = board.getSelectedCell();
-		Checker clickedChecker = checkers.getCheckerAt(row, col);
-		
-		if (cell == null) {
-			board.selectCell(row, col);
-			cell = board.getSelectedCell();
+		if (cell != null) {
+			System.out.println("! " + checkers.couldMove(cell.row, cell.col, row, col));
 		}
-		
-		if (clickedChecker != null && clickedChecker.getPlayerId() != game.getCurrentPlayerId()) return;
-		
-		Checker selectedChecker = checkers.getCheckerAt(cell.row, cell.col);
-		
-		if (clickedChecker != null && selectedChecker != null && clickedChecker.getType() == selectedChecker.getType()) {
-			board.selectCell(row, col);
-			return;
-		}
-		
-		if (checkers.canMove(cell.row, cell.col, row, col)) {
+		if (cell != null && checkers.canMove(cell.row, cell.col, row, col)) {
 			checkers.makeMove(cell.row, cell.col, row, col);
 			board.deselect();
-			game.toggleCurrentPlayerId();
-		}
+			
+			if (game.getCurrentPlayerId() == game.getPlayerId()) {
+				game.sendMove(new Move(cell.row, cell.col, row, col));
+			}
 
+			game.toggleCurrentPlayerId();
+		} else {
+			game.setStatus("You can't make it move");
+		}
+		
+		repaint();
 	}
 
 	@Override
