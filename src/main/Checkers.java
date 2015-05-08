@@ -14,7 +14,7 @@ public class Checkers {
 	private Checker[][] checkers;
 	
 	enum MoveError {
-		OUT_OF_BOARD, ISNT_EMPTY, MOVE_BACK, NOT_DIAGONALLY, OTHER, NONE, JUMP_OWN_CHECKER, JUMP_SEVERAL_CHECKERS, MOVE_TO_MYSELF
+		OUT_OF_BOARD, MOVE_BACK, NOT_DIAGONALLY, OTHER, NONE, JUMP_OWN_CHECKER, JUMP_SEVERAL_CHECKERS, MOVE_TO_MYSELF, START_CELL_IS_EMPTY, END_CELL_ISNT_EMPTY, JUMP
 	}
 
 	public Checkers(Board board, int rowsQuantity) {
@@ -72,8 +72,9 @@ public class Checkers {
 	public void makeMove(int fromRow, int fromCol, int toRow, int toCol) {
 		Checker from = checkers[fromRow][fromCol];
 		from.moveToCell(toRow, toCol);
-
-		if (getCurrentPlayerId() == getPlayerId() && from.getRow() == 0)
+		
+		if ((getCurrentPlayerId() == getPlayerId() && from.getRow() == 0) 
+		 || (getCurrentPlayerId() == getEnemyId() && from.getRow() == board.getCellsPerRow() - 1))
 			from.becomeKing();
 		
 		Checker jumpedChecker = getJumpedChecker(fromRow, fromCol, toRow, toCol);
@@ -151,15 +152,17 @@ public class Checkers {
 	}
 
 	public boolean canMove(int fromRow, int fromCol, int toRow, int toCol) {
-		System.out.println(canMoveWithError(fromRow, fromCol, toRow, toCol));
 		return canMoveWithError(fromRow, fromCol, toRow, toCol) == MoveError.NONE ? true : false;
 	}
 	
 	private MoveError canMoveWithError(int fromRow, int fromCol, int toRow, int toCol) {
 		int cellsPerRow = board.getCellsPerRow();
 		Cell cell = board.getSelectedCell();
-		CheckerType currentCheckerType = checkers[cell.row][cell.col].getType();
+		Checker currentChecker = checkers[cell.row][cell.col];
 		int currentPlayerId = getCurrentPlayerId();
+		
+		if (currentChecker == null) return MoveError.START_CELL_IS_EMPTY;
+		CheckerType currentCheckerType = currentChecker.getType();
 		
 		int back = (currentPlayerId == getEnemyId()) ? -1 : 1;
 		
@@ -170,7 +173,7 @@ public class Checkers {
 				|| toRow >= cellsPerRow || toCol >= cellsPerRow)
 		return MoveError.OUT_OF_BOARD;
 		
-		if (checkers[toRow][toCol] != null) return MoveError.ISNT_EMPTY;
+		if (checkers[toRow][toCol] != null) return MoveError.END_CELL_ISNT_EMPTY;
 
 		if (currentCheckerType == CheckerType.MAN) {	
 			if (Math.abs(fromRow-toRow) == 1 && Math.abs(fromCol-toCol) == 1) {
@@ -210,6 +213,55 @@ public class Checkers {
 			
 		}
 			
+		return MoveError.NONE;
+	}
+	
+	public MoveError couldMove(int fromRow, int fromCol, int toRow, int toCol) {
+		int cellsPerRow = board.getCellsPerRow();
+		int currentPlayerId = getCurrentPlayerId();
+		
+		if (fromRow < 0 || fromCol < 0 || toRow < 0 || toCol < 0
+				|| fromRow >= cellsPerRow || fromCol >= cellsPerRow
+				|| toRow >= cellsPerRow || toCol >= cellsPerRow) {
+			return MoveError.OUT_OF_BOARD;
+		}
+		
+		if (checkers[fromRow][fromCol] == null) {
+			return MoveError.START_CELL_IS_EMPTY;
+		}
+		
+		if (fromRow == toRow && fromCol == toCol)  {
+			return MoveError.MOVE_TO_MYSELF;
+		}
+		
+		if (checkers[toRow][toCol] != null) {
+			return MoveError.END_CELL_ISNT_EMPTY;
+		}
+		
+		if (Math.abs(toRow-fromRow) != Math.abs(toCol-fromCol)) {
+			return MoveError.NOT_DIAGONALLY;
+		}
+		
+		int rowDirection = (toRow - fromRow < 0) ? -1 : 1;
+		int colDirection = (toCol - fromCol < 0) ? -1 : 1;
+		int back = (currentPlayerId == getEnemyId()) ? -1 : 1;
+		
+		if (checkers[fromRow][fromCol].getType() == CheckerType.MAN) {
+			if (Math.abs(toRow-fromRow) != 1) {
+				return MoveError.JUMP;
+			}
+			
+			if (fromRow + back == toRow) {
+				return MoveError.MOVE_BACK;
+			}
+		} else {
+			for (int i=1; i<Math.abs(fromRow-toRow); i++) {
+				if (checkers[fromRow + i*rowDirection][fromCol + i*colDirection] != null) {
+					return MoveError.JUMP;
+				}
+			}
+		}
+		
 		return MoveError.NONE;
 	}
 	
@@ -268,6 +320,10 @@ public class Checkers {
 	
 	private int getEnemyId() {
 		return board.getWorld().getGame().getEnemyId();
+	}
+
+	public boolean isExitChecker(int row, int col) {
+		return getCheckerAt(row, col) != null;
 	}
 
 }
