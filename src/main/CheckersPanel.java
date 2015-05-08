@@ -51,9 +51,8 @@ public class CheckersPanel extends JPanel implements MouseListener {
 	}
 
 	public void update() {
-        checkers.update();
+		checkers.update();
 		board.update();
-
 	}
 	
 	public Game getGame() {
@@ -88,8 +87,8 @@ public class CheckersPanel extends JPanel implements MouseListener {
 		int col = e.getX()/board.getCellSize();
 		
 		Cell cell = board.getSelectedCell();
-
-        if (cell != null) checkers.makeMove(cell.row, cell.col, row, col);
+		if (cell != null) checkers.makeMove(cell.row, cell.col, row, col);
+		
 		if (checkers.getCheckerAt(row, col) != null) board.selectCell(row, col);
 		
 		repaint();
