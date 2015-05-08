@@ -30,15 +30,16 @@ public class Game extends JFrame implements Runnable {
 
 	private Container contPane;
 	private Color bgColor = new Color(250, 250, 250);
-
-	private CheckersPanel world = new CheckersPanel(this);
+	
+	private CheckersPanel world;
 	private Chat chat;
 	private JPanel statusLine = new JPanel();
 
-	private int playerId;
-	private int enemyId;
-	private int currentPlayerId;
-
+	
+	private int playerId = 0;
+	private int enemyId = 1;
+	private int currentPlayerId = 0;
+	
 	private boolean isRunning = true;
 
 	public Game(String host, int port) {
@@ -49,6 +50,8 @@ public class Game extends JFrame implements Runnable {
 		chat = new Chat(HOST, PORT);
 
 
+		world = new CheckersPanel(this);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(false);
 
@@ -66,36 +69,36 @@ public class Game extends JFrame implements Runnable {
 	public Game() {
 		this(null, 0);
 	}
-
-	private void init() {
-		GridBagConstraints c = new GridBagConstraints();
-
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
-		c.gridy = 0;
-		c.weightx = .5f;
-		c.weighty = .001f;
-		c.insets = new Insets(30, 30, 30, 30);
-		contPane.add(world, c);
-
-		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 1;
-		c.gridy = 0;
-		c.weightx = .2f;
-		c.anchor = GridBagConstraints.LINE_START;
-		contPane.add(chat, c);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.gridx = 0;
-		c.gridy = 1;
-		c.gridwidth = 2;
-		c.weightx = 1;
-		c.weighty = .999f;
-		c.insets = new Insets(0, 0, 0, 0);
-		c.anchor = GridBagConstraints.PAGE_END;
-		statusLine.add(new JLabel("Status line"));
-		statusLine.setBackground(new Color(240, 240, 240));
-		contPane.add(statusLine, c);
+	
+	private void init() { 
+        GridBagConstraints c = new GridBagConstraints();
+        
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = .5f;
+        c.weighty = .001f;
+        c.insets = new Insets(30, 30, 30, 30);
+        contPane.add(world, c);
+        
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = .2f;
+        c.anchor = GridBagConstraints.LINE_START;        
+        contPane.add(chat, c);
+            
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 2;
+        c.weightx = 1;
+        c.weighty = .999f;
+        c.insets = new Insets(0, 0, 0, 0);
+        c.anchor = GridBagConstraints.PAGE_END;
+        statusLine.add(new JLabel("Waiting for connection ..."));
+        statusLine.setBackground(new Color(240, 240, 240));
+        contPane.add(statusLine, c);
 	}
 
 	public void start() {
@@ -105,16 +108,16 @@ public class Game extends JFrame implements Runnable {
 	public void stop() {
 		isRunning = false;
 	}
-
-	public int getPlayer() {
+	
+	public int getPlayerId() {
 		return playerId;
 	}
-
-	public int getEnemy() {
+	
+	public int getEnemyId() {
 		return enemyId;
 	}
-
-	public int getCurrentPlayer() {
+	
+	public int getCurrentPlayerId() {
 		return currentPlayerId;
 	}
 
@@ -136,6 +139,10 @@ public class Game extends JFrame implements Runnable {
 		Game checkers = new Game("127.0.0.1", 8081);
 
 		checkers.start();
+	}
+
+	public void toggleCurrentPlayerId() {
+		currentPlayerId = (currentPlayerId == 0) ? 1 : 0;
 	}
 
 }
