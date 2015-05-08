@@ -45,7 +45,7 @@ public class Chat extends JPanel implements ActionListener {
 		init();
 		String input = JOptionPane.showInputDialog("Enter login:");
 		System.out.println(input);
-		client = new ClientChat("localhost", 1500, input, this);
+		client = new ClientChat("192.168.1.100", 1500, input, this);
 
 		if (!client.start())
 			return;

@@ -1,59 +1,62 @@
 package main;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class Move implements Serializable {
+
+	private int fromCell;
+	private int fromRow;
+	private int toCell;
+	private int toRow;
 	
-	private int fromX;
-	private int fromY;
-	private int toX;
-	private int toY;
-	
-	
-	
-	public Move(int fromRow, int fromCol, int toRow, int toCol){
-		this.fromX = fromRow;
-		this.fromY = fromCol;
-		this.toX = toRow;
-		this.toY = toCol;
+	public Move(int fromRow, int fromCol, int toRow, int toCol) {
+		this.fromCell = fromRow;
+		this.fromRow = fromCol;
+		this.toCell = toRow;
+		this.toRow = toCol;
 	}
 
 	public int getFromRow() {
-		return fromX;
+		return fromCell;
 	}
 
-	public void setFromRow(int fromX) {
-		this.fromX = fromX;
+	public void setFromRow(int fromCell) {
+		this.fromCell = fromCell;
 	}
 
 	public int getFromCol() {
-		return fromY;
+		return fromRow;
 	}
 
-	public void setFromCol(int fromY) {
-		this.fromY = fromY;
+	public void setFromCol(int fromRow) {
+		this.fromRow = fromRow;
 	}
 
 	public int getToRow() {
-		return toX;
+		return toCell;
 	}
 
-	public void setToRow(int toX) {
-		this.toX = toX;
+	public void setToRow(int toCell) {
+		this.toCell = toCell;
 	}
 
 	public int getToCol() {
-		return toY;
+		return toRow;
 	}
 
-	public void setToCol(int toY) {
-		this.toY = toY;
+	public void setToCol(int toRow) {
+		this.toRow = toRow;
 	}
 
 	@Override
 	public String toString() {
-		return "Move [fromX=" + fromX + ", fromY=" + fromY + ", toX=" + toX
-				+ ", toY=" + toY + "]";
+		return "Move [fromCell=" + fromCell + ", fromRow=" + fromRow + ", toCell=" + toCell
+				+ ", toRow=" + toRow + "]";
 	}
 
 }

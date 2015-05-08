@@ -60,6 +60,10 @@ public class Board {
     	selectedCol = col;
     }
     
+    public void deselect(){
+    	selectCell(-1,-1);
+    }
+    
     public Cell getSelectedCell() {
     	return (selectedRow > 0 || selectedCol > 0) ? new Cell(selectedRow, selectedCol) : null;
     }
